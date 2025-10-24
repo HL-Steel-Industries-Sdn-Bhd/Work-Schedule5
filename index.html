@@ -253,6 +253,7 @@
 
       projectDiv.setAttribute('draggable', 'true');
 
+      // ✅ 保留你原本的 dragstart clone 逻辑（不改）
       projectDiv.addEventListener('dragstart', function(e) {
         if (!selectedCell || selectedCell.classList.contains('break')) {
           e.preventDefault();
@@ -360,7 +361,14 @@
       merged.dataset.endCol = endCol;
 
       const spanCount = endCol - startCol + 1;
-      merged.style.fontSize = Math.max(12, 16 + spanCount * 2) + 'px';
+      // ---------- 我只改这一处逻辑：若只占 1 格则字体缩小到 50%（否则保持原来的计算）
+      if (spanCount === 1) {
+        merged.style.fontSize = '50%';
+      } else {
+        merged.style.fontSize = Math.max(12, 16 + spanCount * 2) + 'px';
+      }
+      // ---------- 改动结束
+
       const soMatch = dragInfo.projectName.match(/SO-\d+/);
       if (soMatch && soColorMap[soMatch[0]]) {
         merged.style.background = soColorMap[soMatch[0]];
